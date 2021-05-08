@@ -3,5 +3,5 @@
 ## MEMBER 
 	Hika Pasya Mustofa		              05111942000015
 	Farah Dhiah Qorirah		              05111942000018
-	Nadhif Bhagawanta Hadiprayitno		  05111942000029
+	Nadhif Bhagawanta Hadiprayitno		      05111942000029
   
