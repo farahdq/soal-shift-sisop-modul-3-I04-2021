@@ -106,6 +106,7 @@ input into the matrix that has been manually specified. Then multiplication is d
 	      shmdt(matriks);
 	  }
 
+In here we use shared memory because the result will be used in question 2b. The stage that is done in doing this share memory is to make the key first. Then the matrix variable will contain the shared memory segment associated with the shared memory identifier (key), shmid, to the address space of the calling process. and done copying data using memcpy through variable pointer p against variable results so that the variable matrix (memory shared) will contain the results of the matrix that has been multiplied.
 
 ## 2B 
 Create a program using the output matrix of the previous program (program soal2a.c) (Note!: Use shared memory). Then the matrix will be calculated with the new matrix. As follows an example of calculation for the existing matrix. The calculation is that each cell originating from matrix A becomes a number for factorial, then cells from matrix B become the maximum factorial limit (from largest to smallest) (Note!: Use threads for calculations in each cell). 
@@ -114,7 +115,7 @@ If a >= b  -> a!/(a-b)!
 If b > a -> a!
 If 0 -> 0
 
-based on the results of matrix multiplication at point 2a, calculations are performed with a new matrix which has been explained by the elders on the question. Where on each calculation cel matrix should use a thread. first done the declaration of two-dimensional arrays in this program and I use the struct in this program to facilitate the acquisition of the data that I want to get. The program is as follows:
+first done the declaration of two-dimensional arrays in this program and I use the struct in this program to facilitate the acquisition of the data that I want to get. The program is as follows:
 	#include <stdio.h>
 	#include <sys/ipc.h>
 	#include <sys/shm.h>
@@ -178,7 +179,8 @@ Fuctorial function :
 			return n*factorial(n-1);
 	}
 	
-In the main function below the program can access the results of matrix sensitive operations in the program point 2a through share memory with a predetermined key of 1234, where the value is stored in the result variable. Then there is a result variable that will copy the data from the result variable by memcpy for the operation process to be performed next. Each cell operation on the matrix, a thread will be created. Then the first looping process of the thread will run the operation function as a routine with the index attribute as the variable used. The thread is created with pthread_create(&tid[i][j], NULL, &multiplicationmatrix, NULL) and runs with the tid i j incremented each iteration. Then it is joined to each thread that has been created with pthread_join(tid[a], NULL). In order for the thread to run regularly (sequentially) is used sleep(1) so that between threads there is a time lag of 1 second. To end the ongoing share memory used shmctl.
+In the main function below the program can access the results of matrix sensitive operations in the program point 2a through share memory with a predetermined key of 1234, where the value is stored in the result variable. Then there is a result variable that will copy the data from the result variable by memcpy for the operation process to be performed next. Each cell operation on the matrix, a thread will be created. Then the first looping process of the thread will run the operation function as a routine with the index attribute as the variable used. 
+The thread is created with pthread_create(&tid[i][j], NULL, &multiplicationmatrix, NULL) and runs with the tid i j incremented each iteration. Then it is joined to each thread that has been created with pthread_join(tid[a], NULL). In order for the thread to run regularly (sequentially) is used sleep(1) so that between threads there is a time lag of 1 second. To end the ongoing share memory used shmctl.
 
 	void main(){
 	key_t key = 1234;
