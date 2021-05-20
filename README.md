@@ -330,7 +330,7 @@ At this point, you are asked to check the top 5 processes that consume their com
 Based on the program, each command is divided into several functions, namely the exec1 function containing the ps aux command, the exec2 function containing the -nrk 3.3 sort command, and the exec3 function containing the command head -5. Which in each main function is done pipe creation as well as the call of each exec function that if failed it will be done exit and display the error message. Call each function by applying a fork creation that if if(pid == 0) is fulfilled, the exec function will run. So it can be concluded that every function called is a child. It can also be known that ps aux command is used to display all running processes, command sort -nrk 3.3 to sort based on its memory usage, and command head -5 so that the process displayed is the 5th most averaged process.
 
 Problems encountered :
-1. don't add pthread library
+1. haven't add pthread library
 2. confuse about the shared memory code
 
 
