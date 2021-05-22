@@ -333,4 +333,48 @@ Problems encountered :
 1. haven't add pthread library
 2. confuse about the shared memory code
 
+# QUESTION 3
+During his time of inactivity, a student named Alex. He had an idea to tidy up a number of files on his laptop. Because there are too many files, Alex asked Ayub for advice. Ayub suggests creating a C program to categorize the files. This program will move files according to their extension into a folder according to the extension. The folder is in the working directory in which the categorization program is run
+
+Example:
+# The category program is located at /home/izone/kategori
+$ ./kategori -f path/to/file1.jpg path/to/file2.c path/to/file3.zip
+#Result
+/home/izone
+|-jpg
+|--file1.jpg
+|-c
+|--file2.c
+|-zip
+|--file3.zip
+
+## 3A
+Program accepts -f option like stated above, with this option the user may add file arguments to be categorized as much as they want. 
+Output:
+File 1 : Berhasil Dikategorikan (jika berhasil)
+File 2 : Sad, gagal :( (jika gagal)
+File 3 : Berhasil Dikategorikan
+
+
+## 3B
+Program may accept -d option to categorize a directory instead. With this option, the user may only input 1 directory as it's arguments, unlike the -f option where the user may input multiple file arguments. Example:
+$ ./kategori -d /path/to/directory/
+
+The command above will categorize the files in /path/to/directory, the categorization result will be saved in the working directory where the C program is called (categorization result is not located at /path/to/directory).
+Output:
+Jika berhasil, print “Direktori sukses disimpan!”
+Jika gagal, print “Yah, gagal disimpan :(“
+
+## 3C
+Other than the above options, this program accepts the * option. Example:
+$ ./kategori \*
+
+This option categorizes all the file in the working directory when the C program is run
+
+## 3D
+All files must be moved into a folder. Files without extensions will be moved to a folder named "Unknown". Hidden files will be moved to a folder named "Hidden".
+
+## 3E
+Each file to be categorized will be processed by a thread to make the program run in parallel to make it quicker.
+
 
