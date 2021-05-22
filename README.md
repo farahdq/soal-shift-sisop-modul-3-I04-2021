@@ -355,6 +355,12 @@ File 1 : Berhasil Dikategorikan (jika berhasil)
 File 2 : Sad, gagal :( (jika gagal)
 File 3 : Berhasil Dikategorikan
 
+//insert code here
+
+If the argument given by user is -f and the argument path is correct, it will be inserted to thread, and will be executing the function to move file to categorize file. In accordance with the thread amount, thread will be run simultaneously using the pthread_join. There are also different parameters that are the pointer type and return 0 and 1 to know whether the file is able to be categorized or not. if succeed = 1, and if fail = 0. the number returned would then be integerized and if 1 will say = Berhasil Dikategorikan, and if it fails = Sad, gagal
+
+
+Answer
 
 ## 3B
 Program may accept -d option to categorize a directory instead. With this option, the user may only input 1 directory as it's arguments, unlike the -f option where the user may input multiple file arguments. Example:
@@ -365,14 +371,30 @@ Output:
 Jika berhasil, print “Direktori sukses disimpan!”
 Jika gagal, print “Yah, gagal disimpan :(“
 
+//Insert Code here
+
+If the argument that is given by User is -d then the argument path that is chosen will be 1, the first is to call the function list to list and keep the _Path_ file in the array. After that, the element that will make a new thread the execute the move file like 3A, and is exactly the amount of _path_ on the array and will be run in parallel using the pthread_join.
+
+The second parameter would be to return 0 or 1 to indicate if the directory has been categorized or not. 
+
 ## 3C
 Other than the above options, this program accepts the * option. Example:
 $ ./kategori \*
 
 This option categorizes all the file in the working directory when the C program is run
 
+// Insert Code here
+
+If the argument that is given which is "*" the first that is done to keep the _path current working directory_ caused to categorized the file that on the directory that is being used. 
+
+it will call the listFilesRecursively first and save the file in the array, where after that will make a new thread each to execute the move file function. Thread would then run in parallel.
+
+
+
 ## 3D
 All files must be moved into a folder. Files without extensions will be moved to a folder named "Unknown". Hidden files will be moved to a folder named "Hidden".
+
+
 
 ## 3E
 Each file to be categorized will be processed by a thread to make the program run in parallel to make it quicker.
