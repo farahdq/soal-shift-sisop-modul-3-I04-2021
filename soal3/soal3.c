@@ -204,6 +204,6 @@ int main(int argc, char *argv[])
             i++;
             }
         }
-        printf("Direktori suskses disimpan!\n");
+        printf("Direktori Sukses disimpan!\n");
     }
 }
