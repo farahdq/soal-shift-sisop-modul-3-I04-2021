@@ -17,7 +17,7 @@
 #include <ctype.h>
 #include <unistd.h>
 
-/*
+
 char cwd[100];
 pthread_t tid[3];
 char *arr[4],*arr2[20],arr3[100], category[100];
@@ -29,7 +29,7 @@ void* function(void *arg)
     char *token,*token1;
 	pthread_t id=pthread_self();
 
-    //kategoriin filenya, dapet nama ama tipe file nya
+    //To categorize the file and get the name/type of file to be categorized
     token1 = strtok(category, "/");
     while( token1 != NULL ) 
     {
@@ -38,8 +38,9 @@ void* function(void *arg)
         token1 = strtok(NULL, "/");
     }
     strcpy(arr3,arr2[m-1]);
+	
     
-    //ngambil tipe file disini
+    //this is where to grab the file type
     token = strtok(arr2[m-1], ".");
     while( token != NULL ) 
     {
@@ -48,7 +49,8 @@ void* function(void *arg)
         token = strtok(NULL, ".");
     }
 
-    //disini ngubah tipe file nya klo kapital jadi huruf kecil semua
+	
+    //In case file name has capital letter, this will turn it into lower case letter
     char lowcase[100];
     strcpy(lowcase,arr[n-1]);
     for(int i = 0; lowcase[i]; i++)
@@ -65,10 +67,10 @@ void* function(void *arg)
     {
         if(directory == NULL)
         {
-            printf("error\n");
+            printf("Sad, gagal :(\n");
         }
 
-        //ngecek nama tipe file nya udh ada blom
+        //this is to check if name type for the file is there or not
         while((entry=readdir(directory)))
         {
             if(strcmp(entry->d_name,lowcase) == 0 && entry->d_type == 4)
@@ -77,23 +79,21 @@ void* function(void *arg)
                 break;
             }
         }
-        //klo belom kesini
+        //this is if it hasn't
         if(checking == 0)
         {
             strcpy(temp,cwd);
             strcat(temp,"/");
             strcat(temp,lowcase);
-            printf("File type = %s\nBerhasil Dikategorikan\n",lowcase);
             mkdir(temp, 0777);
         }
     }
-    //klo file gaada tipe file nya
+    // If file doesn't have the type file
     else
     {
         strcpy(temp,cwd);
         strcat(temp,"/");
         strcat(temp,"Unknown");
-        printf("File type = Unknown\nBerhasil Dikategorikan\n");
         mkdir(temp, 0777);
     }
 	
@@ -121,20 +121,89 @@ void* function(void *arg)
 
 int main(int argc, char *argv[]) 
 {
-    if(getcwd(cwd, sizeof(cwd)) != NULL) 
-    {
-        printf("Current working dir: %s\n", cwd);
-    } 
+    getcwd(cwd, sizeof(cwd));
 
     int i=0;
-    //loop sebanyak argumen file trus masuk ke thread yg dibuat buat mindahin file
+    //loop as much arguments of the file where it would insert into the thread used to move file
     if (strcmp(argv[1],"-f") == 0) 
     {
         for(int j = 2 ; j < argc ; j++ )
         {
             pthread_create(&(tid[i]),NULL,function,argv[j]);
             pthread_join(tid[i],NULL);
+            printf("File %d : Berhasil Dikategorikan\n", i+1);
             i++;
         }
+    }
+
+    else if (strcmp(argv[1],"-d") == 0 && argc == 3) 
+    {
+        i = 0;
+        DIR *fd;
+        struct dirent *masuk;
+        char tempata[100];
+        fd = opendir(argv[2]);
+        //check if directory can be opened or not
+        if(fd == NULL)
+        {
+            printf("Yah, gagal disimpan :(\n");
+        }
+        // Read what is inside the directory
+        while( (masuk=readdir(fd)) )
+        {
+            if ( !strcmp(masuk->d_name, ".") || !strcmp(masuk->d_name, "..") )
+            continue;
+
+            // Save/Keep the path file that's been categorized in Tempata
+            strcpy(tempata,argv[2]);
+            strcat(tempata,"/");
+            strcat(tempata,masuk->d_name);
+            // Check if the file if its right, if right then it goes inside the thread
+            if(masuk->d_type == 8)
+            {
+            pthread_create(&(tid[i]),NULL,function,tempata); // create the thread
+            pthread_join(tid[i],NULL);
+            i++;
+            }
+        }
+        printf("Direktori Sukses Disimpan!\n");
+    }
+
+    else if (strcmp(argv[1],"*") == 0 && argc == 2) 
+    {
+        i = 0;
+        DIR *fd;
+        struct dirent *masuk;
+        char tempata[100];
+        fd = opendir(cwd);
+
+        if(fd == NULL)
+        {
+            printf("Yah, gagal disimpan :(\n");
+        }
+        char tempatsoal[100] = "/home/damdum/Soal3/soal3.c", tempatsoal3[100] = "/home/damdum/Soal3/soal3";
+        while((masuk=readdir(fd)))
+        {
+            if (!strcmp(masuk->d_name, ".") || !strcmp(masuk->d_name, "..") )
+            continue;
+            
+            strcpy(tempata,cwd);
+            strcat(tempata,"/");
+            strcat(tempata,masuk->d_name);
+		
+            //printf("tempata = %s\n", tempata);
+            //printf("tempatsoal = %s\n", tempatsoal);
+            //printf("tempatsoal3 = %s\n", tempatsoal3);
+		
+            if((strcmp(tempata,tempatsoal) == 0) || strcmp(tempata,tempatsoal3) == 0) 
+            continue;
+            
+            else if(masuk->d_type == 8){
+            pthread_create(&(tid[i]),NULL,function,tempata); //create thread
+            pthread_join(tid[i],NULL);
+            i++;
+            }
+        }
+        printf("Direktori suskses disimpan!\n");
     }
 }
