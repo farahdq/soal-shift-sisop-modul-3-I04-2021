@@ -355,7 +355,21 @@ File 1 : Berhasil Dikategorikan (jika berhasil)
 File 2 : Sad, gagal :( (jika gagal)
 File 3 : Berhasil Dikategorikan
 
-//insert code here
+ 
+ 	
+	getcwd(cwd, sizeof(cwd));
+    int i=0;
+    //loop as much arguments of the file where it would insert into the thread used to move file
+    if (strcmp(argv[1],"-f") == 0) 
+    {
+        for(int j = 2 ; j < argc ; j++ )
+        {
+            pthread_create(&(tid[i]),NULL,function,argv[j]);
+            pthread_join(tid[i],NULL);
+            printf("File %d : Berhasil Dikategorikan\n", i+1);
+            i++;
+        }
+    }
 
 If the argument given by user is -f and the argument path is correct, it will be inserted to thread, and will be executing the function to move file to categorize file. In accordance with the thread amount, thread will be run simultaneously using the pthread_join. There are also different parameters that are the pointer type and return 0 and 1 to know whether the file is able to be categorized or not. if succeed = 1, and if fail = 0. the number returned would then be integerized and if 1 will say = Berhasil Dikategorikan, and if it fails = Sad, gagal
 
@@ -371,7 +385,38 @@ Output:
 Jika berhasil, print “Direktori sukses disimpan!”
 Jika gagal, print “Yah, gagal disimpan :(“
 
-//Insert Code here
+ 	 else if (strcmp(argv[1],"-d") == 0 && argc == 3) 
+    {
+        i = 0;
+        DIR *fd;
+        struct dirent *masuk;
+        char tempata[100];
+        fd = opendir(argv[2]);
+        //check if directory can be opened or not
+        if(fd == NULL)
+        {
+            printf("Yah, gagal disimpan :(\n");
+        }
+        // Read what is inside the directory
+        while( (masuk=readdir(fd)) )
+        {
+            if ( !strcmp(masuk->d_name, ".") || !strcmp(masuk->d_name, "..") )
+            continue;
+
+            // Save/Keep the path file that's been categorized in Tempata
+            strcpy(tempata,argv[2]);
+            strcat(tempata,"/");
+            strcat(tempata,masuk->d_name);
+            // Check if the file if its right, if right then it goes inside the thread
+            if(masuk->d_type == 8)
+            {
+            pthread_create(&(tid[i]),NULL,function,tempata); // create the thread
+            pthread_join(tid[i],NULL);
+            i++;
+            }
+        }
+        printf("Direktori Sukses Disimpan!\n");
+    }
 
 If the argument that is given by User is -d then the argument path that is chosen will be 1, the first is to call the function list to list and keep the _Path_ file in the array. After that, the element that will make a new thread the execute the move file like 3A, and is exactly the amount of _path_ on the array and will be run in parallel using the pthread_join.
 
@@ -383,17 +428,82 @@ $ ./kategori \*
 
 This option categorizes all the file in the working directory when the C program is run
 
-// Insert Code here
+	else if (strcmp(argv[1],"*") == 0 && argc == 2) 
+    {
+        i = 0;
+        DIR *fd;
+        struct dirent *masuk;
+        char tempata[100];
+        fd = opendir(cwd);
+
+        if(fd == NULL)
+        {
+            printf("Yah, gagal disimpan :(\n");
+        }
+        char tempatsoal[100] = "/home/damdum/Soal3/soal3.c", tempatsoal3[100] = "/home/damdum/Soal3/soal3";
+        while((masuk=readdir(fd)))
+        {
+            if (!strcmp(masuk->d_name, ".") || !strcmp(masuk->d_name, "..") )
+            continue;
+
+            strcpy(tempata,cwd);
+            strcat(tempata,"/");
+            strcat(tempata,masuk->d_name);
+
+            //printf("tempata = %s\n", tempata);
+            //printf("tempatsoal = %s\n", tempatsoal);
+            //printf("tempatsoal3 = %s\n", tempatsoal3);
+
+            if((strcmp(tempata,tempatsoal) == 0) || strcmp(tempata,tempatsoal3) == 0) 
+            continue;
+
+            else if(masuk->d_type == 8){
+            pthread_create(&(tid[i]),NULL,function,tempata); //create thread
+            pthread_join(tid[i],NULL);
+            i++;
+            }
+        }
+        printf("Direktori suskses disimpan!\n");
+    }
 
 If the argument that is given which is "*" the first that is done to keep the _path current working directory_ caused to categorized the file that on the directory that is being used. 
 
-it will call the listFilesRecursively first and save the file in the array, where after that will make a new thread each to execute the move file function. Thread would then run in parallel.
+it will call the fucntiion first and save the file in the array, where after that will make a new thread each to execute the move file function. Thread would then run in parallel.
 
 
 
 ## 3D
 All files must be moved into a folder. Files without extensions will be moved to a folder named "Unknown". Hidden files will be moved to a folder named "Hidden".
 
+	 else
+    {
+        strcpy(temp,cwd);
+        strcat(temp,"/");
+        strcat(temp,"Unknown");
+        mkdir(temp, 0777);
+    }
+	
+
+    char path[1024], destination[1024];
+    strcpy(path,arg);
+    strcpy(destination,cwd);
+    strcat(destination,"/");
+    if(n == 1 )
+    {
+        strcat(destination,"Unknown");
+    }
+    else
+    {
+        strcat(destination,lowcase);
+    }
+    strcat(destination,"/");
+    strcat(destination,arr3);
+    rename(path,destination);
+    n = 0;
+    m = 0;
+
+	return NULL;
+}
 
 
 ## 3E
